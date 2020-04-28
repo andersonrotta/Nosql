@@ -66,3 +66,73 @@ return m.title, m.released
 4.13 match (p)-[:ACTED_IN]->(m)
 where p:Person and m.movie
 return p.name, m.title
+
+5.1
+
+5.2
+
+5.3 match (follower:person)-[:FOLLOWS*3]->(p:person)
+where follower.name = 'Tom Hanks'
+return p
+
+5.4 match (follower:person)-[:FOLLOWS*1..2]->(p:person)
+where follower.name = 'Tom Hanks'
+return p
+
+5.5 
+
+5.6 MATCH (p:Person) WHERE p.name STARTS WITH 'Neo'
+OPTIONAL MATCH (p)-[r:REVIEWED]->(m:Movie)
+RETURN p.name, type(r), m.title
+
+5.7
+
+5.9
+
+5.10
+
+5.11 match (a:person)-[:ACTED_IN]->(m:Movie)
+with a, count(a) AS numMovies, collect(m.title) as
+movies
+where numMovies = 5
+return a.name, numMovies, movies
+
+5.12
+
+6.1
+
+6.2 MATCH (p:Person)-[:DIRECTED | :ACTED_IN]->(m:Movie)
+WHERE p.name = 'Tom Cruise’
+RETURN m.released, collect(DISTINCT m.title) AS movies
+
+6.3
+
+6.4 MATCH (p:Person)-[:DIRECTED | :ACTED_IN]->(m:Movie)
+WHERE p.name = 'Tom Cruise’
+RETURN m.released, collect(DISTINCT m.title) AS movies
+Order by m.releaed desc
+
+6.5 MATCH (p:Person)-[:DIRECTED | :ACTED_IN]->(m:Movie)
+WHERE p.name = 'Tom Cruise’
+RETURN m.released, collect(DISTINCT m.title) AS movies
+Order by m.releaed ASC
+
+6.6 match (a:person)-[:ACTED_IN]->(m:Movie)
+with a, count(a) AS numMovies, collect(m.title) as
+movies
+where numMovies <= 3
+return a.name, numMovies, movies
+
+7.1
+
+7.2 MATCH (a:Person)-[:ACTED_IN]->(m:Movie)
+WITH m, count(m) AS numCast, collect(a.name) as cast
+RETURN m.title, cast, numCast ORDER BY size(cast)
+
+7.3 
+
+7.4 MATCH (p:Person)-[:ACTED_IN]->(:Movie)
+WHERE exists(p.born)// calculate the age
+WITH DISTINCT p, date().year - p.born as age
+RETURN p.name, age as `age today`
+ORDER BY p.born DESC
