@@ -161,6 +161,9 @@ Type "it" for more
 
 #Exercício 3 – Fraude na Enron!
 
+1.	> db.stocks.aggregate([{ $group: { _id: "$sender" } }]), db.stocks.aggregate([{ $group: { _id: "$sender" } }, { $count: "quantidade_pessoas" }])
+
+2.	db.stocks.find( { "text": /(^|\s)fraud($|\s)/ } ).count()
 
 
 
